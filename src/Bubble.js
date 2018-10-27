@@ -127,9 +127,36 @@ export default class Bubble extends React.PureComponent {
     return null;
   }
 
-  render() {
+  renderView() {
     return (
-      <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
+        <TouchableWithoutFeedback
+          onLongPress={this.onLongPress}
+          accessibilityTraits="text"
+          {...this.props.touchableProps}
+          >
+          <View>
+            {this.renderCustomView()}
+            {this.renderMessageImage()}
+            {this.renderMessageText()}
+            <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
+              {this.renderTime()}
+              {this.renderTicks()}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+    )
+  }
+
+  render() {
+    const { customRenderer } = this.props;
+
+    return (
+      <View
+        style={[
+          styles[this.props.position].container,
+          this.props.containerStyle[this.props.position],
+        ]}
+      >
         <View
           style={[
             styles[this.props.position].wrapper,
@@ -138,26 +165,22 @@ export default class Bubble extends React.PureComponent {
             this.handleBubbleToPrevious(),
           ]}
         >
-          <TouchableWithoutFeedback
-            onLongPress={this.onLongPress}
-            accessibilityTraits="text"
-            {...this.props.touchableProps}
-          >
-            <View>
-              {this.renderCustomView()}
-              {this.renderMessageImage()}
-              {this.renderMessageText()}
-              <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
-                {this.renderTime()}
-                {this.renderTicks()}
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
+          {customRenderer
+            ? customRenderer({
+                render: this.renderView(),
+                styles: [
+                  styles[this.props.position].wrapper,
+                  this.props.wrapperStyle[this.props.position],
+                  this.handleBubbleToNext(),
+                  this.handleBubbleToPrevious(),
+                ]
+              })
+            : this.renderView()
+          }
         </View>
       </View>
-    );
+    )
   }
-
 }
 
 const styles = {
@@ -168,7 +191,7 @@ const styles = {
     },
     wrapper: {
       borderRadius: 15,
-      backgroundColor: Color.leftBubbleBackground,
+      // backgroundColor: Color.leftBubbleBackground,
       marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
@@ -187,7 +210,7 @@ const styles = {
     },
     wrapper: {
       borderRadius: 15,
-      backgroundColor: Color.defaultBlue,
+      // backgroundColor: Color.defaultBlue,
       marginLeft: 60,
       minHeight: 20,
       justifyContent: 'flex-end',

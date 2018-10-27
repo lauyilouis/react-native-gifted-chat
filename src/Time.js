@@ -42,7 +42,7 @@ const styles = {
       ...containerStyle,
     },
     text: {
-      color: Color.timeTextColor,
+      color: Color.white,
       ...textStyle,
     },
   }),
