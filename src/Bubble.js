@@ -173,7 +173,8 @@ export default class Bubble extends React.PureComponent {
                   this.props.wrapperStyle[this.props.position],
                   this.handleBubbleToNext(),
                   this.handleBubbleToPrevious(),
-                ]
+                ],
+                position: this.props.position,
               })
             : this.renderView()
           }
